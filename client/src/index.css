@@ -1064,3 +1064,36 @@ img {
     transition: none !important;
   }
 }
+
+/* Keep the single launch action within reach without covering the page ending. */
+.site-shell {
+  padding-bottom: calc(108px + env(safe-area-inset-bottom, 0px));
+}
+html {
+  scroll-padding-bottom: calc(108px + env(safe-area-inset-bottom, 0px));
+}
+.launch-dock {
+  position: fixed;
+  z-index: 40;
+  inset-inline: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  padding: 16px 20px calc(20px + env(safe-area-inset-bottom, 0px));
+  pointer-events: none;
+}
+.launch-dock > .button {
+  width: min(100%, 380px);
+  pointer-events: auto;
+  box-shadow:
+    0 8px 28px #173f922e,
+    0 2px 6px #173f9214;
+}
+.launch-dock > .button:hover {
+  box-shadow: 0 10px 32px #173f923d;
+}
+@media (max-width: 760px) {
+  .launch-dock > .button {
+    width: min(100%, 420px);
+  }
+}

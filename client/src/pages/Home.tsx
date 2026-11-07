@@ -1,6 +1,6 @@
 import { ArrowUpRight, BellRing, Scissors } from "lucide-react";
 import { SiteLayout } from "@/components/MoaLayout";
-import { LaunchButton } from "@/components/LaunchDialog";
+
 import "./home-highlights.css";
 import PreparationIllustration from "@/components/PreparationIllustration";
 function ProductConcept({ preparation = false }: { preparation?: boolean }) {
@@ -121,10 +121,6 @@ export default function Home() {
                 <strong>월 49,800원</strong>
                 <span>출시 예정</span>
               </div>
-              <div className="hero-actions">
-                <LaunchButton />
-                <p className="quiet">신청은 무료이며 결제되지 않아요.</p>
-              </div>
             </div>
             <ProductConcept />
           </div>
@@ -195,7 +191,6 @@ export default function Home() {
               가장 먼저 전해드릴게요.
             </h2>
             <p>이메일 하나로 새로운 소식을 받아보세요.</p>
-            <LaunchButton />
             <span className="quiet">무료 알림 신청 · 결제 정보 입력 없이</span>
             <a className="text-link" href="/price">
               예정 요금과 자주 묻는 질문 <ArrowUpRight size={17} />

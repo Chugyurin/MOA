@@ -11,15 +11,16 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { ArrowRight, Check, Mail, X } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 const LaunchContext = createContext<() => void>(() => {});
-export function LaunchButton({ compact = false }: { compact?: boolean }) {
+export function LaunchButton() {
   const open = useContext(LaunchContext);
   return (
     <button
       type="button"
-      className={`button primary ${compact ? "compact" : ""}`}
+      className="button primary"
+      aria-haspopup="dialog"
       onClick={open}
     >
-      {compact ? "출시 알림 받기" : "무료로 출시 알림 받기"}
+      무료로 출시 알림 받기
       <ArrowRight size={18} aria-hidden="true" />
     </button>
   );

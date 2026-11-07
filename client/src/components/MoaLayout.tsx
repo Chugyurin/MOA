@@ -49,7 +49,6 @@ export function SiteLayout({
                 </a>
               ))}
             </nav>
-            <LaunchButton compact />
             <button
               type="button"
               className="menu-toggle"
@@ -77,6 +76,13 @@ export function SiteLayout({
             <a href="/price">이용 안내 보기 ↗</a>
           </div>
         </footer>
+        <div
+          className="launch-dock"
+          role="region"
+          aria-label="무료 출시 알림 신청"
+        >
+          <LaunchButton />
+        </div>
       </div>
     </LaunchProvider>
   );

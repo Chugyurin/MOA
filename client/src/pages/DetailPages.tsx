@@ -6,7 +6,7 @@ import {
   PackageOpen,
 } from "lucide-react";
 import { SiteLayout } from "@/components/MoaLayout";
-import { LaunchButton } from "@/components/LaunchDialog";
+
 import { Redirect } from "wouter";
 import "./detail.css";
 export function AboutPage() {
@@ -47,7 +47,6 @@ function Detail({
               <h2>출시 소식을 받아보세요.</h2>
               <p>구체적인 이용 조건은 출시 시 안내해 드려요.</p>
             </div>
-            <LaunchButton />
           </div>
         </div>
       </main>
