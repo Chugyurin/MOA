@@ -3,9 +3,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { AlertCircle, Home } from "lucide-react";
 import { useEffect } from "react";
 import { useLocation } from "wouter";
+import { sitePath } from "@/lib/site-path";
 
 // Hosting answers this path with HTTP 404 while still serving the app.
-const NOT_FOUND_PATH = "/404";
+const NOT_FOUND_PATH = sitePath("/404");
 
 // Render for unknown routes and for items the server confirmed missing (e.g. `/page/:id`).
 // The redirect is irreversible: never render while loading, on other errors, or before auth resolves.

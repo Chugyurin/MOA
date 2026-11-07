@@ -1,6 +1,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { Menu, X } from "lucide-react";
 import { LaunchButton, LaunchProvider } from "./LaunchDialog";
+import { sitePath } from "@/lib/site-path";
 type PageName = "about" | "how" | "care" | "price";
 const links = [
   { label: "서비스 살펴보기", href: "/", page: "about" },
@@ -31,7 +32,7 @@ export function SiteLayout({
         </a>
         <header className="site-header">
           <div className="wrap header-inner">
-            <a href="/" className="mobile-home">
+            <a href={sitePath("/")} className="mobile-home">
               서비스 살펴보기
             </a>
             <nav
@@ -41,7 +42,7 @@ export function SiteLayout({
             >
               {links.map(link => (
                 <a
-                  href={link.href}
+                  href={sitePath(link.href)}
                   key={link.page}
                   aria-current={active === link.page ? "page" : undefined}
                 >
@@ -73,7 +74,7 @@ export function SiteLayout({
               <br />
               제품 사양과 기능, 이용 조건은 개발 과정에서 달라질 수 있습니다.
             </p>
-            <a href="/price">이용 안내 보기 ↗</a>
+            <a href={sitePath("/price")}>이용 안내 보기 ↗</a>
           </div>
         </footer>
         <div

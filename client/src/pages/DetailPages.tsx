@@ -9,6 +9,7 @@ import { SiteLayout } from "@/components/MoaLayout";
 
 import { Redirect } from "wouter";
 import "./detail.css";
+import { sitePath } from "@/lib/site-path";
 export function AboutPage() {
   return <Redirect to="/" />;
 }
@@ -32,7 +33,7 @@ function Detail({
     <SiteLayout active={active}>
       <main id="main" className="detail-page">
         <div className="detail-wrap">
-          <a className="text-link back-link" href="/">
+          <a className="text-link back-link" href={sitePath("/")}>
             <ArrowLeft size={17} />
             서비스 살펴보기
           </a>

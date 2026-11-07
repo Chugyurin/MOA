@@ -3,6 +3,7 @@ import { SiteLayout } from "@/components/MoaLayout";
 
 import "./home-highlights.css";
 import PreparationIllustration from "@/components/PreparationIllustration";
+import { sitePath } from "@/lib/site-path";
 function ProductConcept({ preparation = false }: { preparation?: boolean }) {
   return (
     <figure className="product-scene">
@@ -192,7 +193,7 @@ export default function Home() {
             </h2>
             <p>이메일 하나로 새로운 소식을 받아보세요.</p>
             <span className="quiet">무료 알림 신청 · 결제 정보 입력 없이</span>
-            <a className="text-link" href="/price">
+            <a className="text-link" href={sitePath("/price")}>
               예정 요금과 자주 묻는 질문 <ArrowUpRight size={17} />
             </a>
           </div>
