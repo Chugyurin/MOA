@@ -24,4 +24,15 @@ export async function saveLaunchSignup(
   if (!response.ok) throw new Error("출시 알림 저장에 실패했습니다.");
   const result = await response.json();
   if (result?.ok !== true) throw new Error("출시 알림 저장을 확인하지 못했습니다.");
+
+  // Report only a completed action, never the email, consent, or health details.
+  // A blocked/unavailable pixel must not turn a saved signup into an error.
+  if (typeof window !== "undefined") {
+    try {
+      const pixelWindow = window as Window & { fbq?: (...args: unknown[]) => void };
+      pixelWindow.fbq?.("trackSingle", "2343685343054855", "Lead");
+    } catch {
+      // The signup itself has already been saved successfully.
+    }
+  }
 }
