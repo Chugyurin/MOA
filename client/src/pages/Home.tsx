@@ -1,14 +1,8 @@
-import {
-  ArrowDown,
-  ArrowUpRight,
-  BellRing,
-  Check,
-  Clock3,
-  Smartphone,
-} from "lucide-react";
+import { ArrowUpRight, BellRing, Scissors } from "lucide-react";
 import { SiteLayout } from "@/components/MoaLayout";
 import { LaunchButton } from "@/components/LaunchDialog";
-function ProductConcept() {
+import "./home-highlights.css";
+function ProductConcept({ preparation = false }: { preparation?: boolean }) {
   return (
     <figure className="product-scene">
       <div className="scene-grid" aria-hidden="true" />
@@ -21,7 +15,7 @@ function ProductConcept() {
         <div className="device-display">
           <span className="display-dot" />
           아침 약 준비 시간<strong>08:30</strong>
-          <span>오늘도 편안한 하루 되세요</span>
+          <span>한 번분 준비 완료</span>
         </div>
         <div className="device-slot">
           <div className="device-nozzle" />
@@ -35,11 +29,17 @@ function ProductConcept() {
       </div>
       <div className="scene-note">
         <span className="note-icon">
-          <BellRing size={19} />
+          {preparation ? <Scissors size={19} /> : <BellRing size={19} />}
         </span>
         <div>
-          <strong>약 챙길 시간이에요</strong>
-          <span>한 번분을 컵에 준비해요</span>
+          <strong>
+            {preparation ? "약봉지 그대로 넣으세요" : "약 챙길 시간이에요"}
+          </strong>
+          <span>
+            {preparation
+              ? "자동으로 잘라 컵에 담아요"
+              : "한 번분을 컵에 준비해요"}
+          </span>
         </div>
       </div>
       <figcaption>
@@ -48,173 +48,142 @@ function ProductConcept() {
     </figure>
   );
 }
+function CupIllustration({ reminder = false }: { reminder?: boolean }) {
+  return (
+    <div
+      className={`cup-illustration ${reminder ? "cup-reminder" : ""}`}
+      role="img"
+      aria-label={
+        reminder
+          ? "컵에 남아 있는 약과 다시 울리는 알림을 표현한 일러스트"
+          : "여러 약봉지의 약이 한 컵에 모이는 일러스트"
+      }
+    >
+      {reminder ? (
+        <div className="reminder-signal">
+          <span className="signal-ring" />
+          <span className="signal-ring outer" />
+          <BellRing size={32} strokeWidth={1.6} />
+        </div>
+      ) : (
+        <div className="packet-row">
+          {[0, 1, 2].map(n => (
+            <div className={`medicine-packet packet-${n}`} key={n}>
+              <span />
+              <i />
+              <i />
+            </div>
+          ))}
+        </div>
+      )}
+      {!reminder && (
+        <div className="packet-path" aria-hidden="true">
+          <span />
+          <span />
+          <span />
+        </div>
+      )}
+      <div className="large-cup">
+        <div className="cup-interior">
+          <i />
+          <i />
+          <i />
+          <i />
+          <i />
+        </div>
+      </div>
+      <div className="cup-shadow" />
+      {reminder && (
+        <span className="reminder-label">
+          <span />
+          약이 남아 있어요
+        </span>
+      )}
+    </div>
+  );
+}
 export default function Home() {
   return (
     <SiteLayout>
       <main id="main">
-        <section className="hero">
+        <section className="hero restored-hero" aria-labelledby="hero-title">
           <div className="wrap hero-grid">
             <div className="hero-copy">
-              <p className="eyebrow">
-                <span className="status-dot" />
-                스마트 복약 케어 · 출시 준비 중
-              </p>
-              <h1>
-                부모님의 약 시간,
+              <p className="eyebrow">부모님을 위한 스마트 복약 케어</p>
+              <h1 id="hero-title">
+                부모님 약,
                 <br />
-                마음이 놓이는
-                <br />
-                <span>일상이 되도록.</span>
+                <span>챙기기 힘드시죠?</span>
               </h1>
-              <p className="hero-description">
-                약을 준비하는 순간부터 확인까지.
-                <br />
-                부모님께는 간편함을, 가족에게는 안심을 더해요.
-              </p>
+              <p className="hero-description">이제 쉽게 관리하세요.</p>
+              <div className="restored-price">
+                <strong>월 49,800원</strong>
+                <span>출시 예정</span>
+              </div>
               <div className="hero-actions">
                 <LaunchButton />
-                <p className="quiet">
-                  신청은 무료예요. 구매나 결제로 이어지지 않아요.
-                </p>
+                <p className="quiet">신청은 무료이며 결제되지 않아요.</p>
               </div>
-              <a className="text-link" href="#experience">
-                어떤 서비스인지 살펴보기 <ArrowDown size={17} />
-              </a>
             </div>
             <ProductConcept />
           </div>
         </section>
-        <section id="experience" className="experience section">
+        <section
+          id="experience"
+          className="restored-features"
+          aria-label="스마트 복약 케어 핵심 기능"
+        >
           <div className="wrap">
-            <div className="section-heading">
-              <p className="eyebrow">매일 반복되는 일이니까</p>
-              <h2>
-                챙기는 수고는 덜고,
-                <br />
-                함께 살피는 마음은 더하고.
-              </h2>
-              <p>복잡한 약 관리를 돕는 세 가지 연결을 준비하고 있어요.</p>
-            </div>
-            <div className="feature-columns">
-              <article>
-                <span className="feature-number">01 / 준비</span>
-                <h3>
-                  여러 약봉지에서
-                  <br />한 번분을 한 컵으로.
-                </h3>
-                <p>
-                  설정한 시간에 약봉지를 열고,
-                  <br />
-                  먹어야 할 만큼 컵에 담도록 개발 중이에요.
-                </p>
-                <a className="text-link" href="/how">
-                  처음 이용하는 방법 <ArrowUpRight size={18} />
-                </a>
+            <div className="benefit-grid">
+              <article className="benefit-card">
+                <div className="benefit-copy">
+                  <p className="benefit-kicker">약 종류가 많아도,</p>
+                  <h2>
+                    먹어야 할 만큼,
+                    <br />
+                    <span>한 컵에.</span>
+                  </h2>
+                  <p>자동으로 한 번분을 조합해요.</p>
+                </div>
+                <CupIllustration />
               </article>
-              <article>
-                <span className="feature-number">02 / 알림</span>
-                <h3>
-                  놓치기 쉬운 약 시간,
-                  <br />한 번 더 알려드려요.
-                </h3>
-                <p>
-                  컵에 약이 남아 있으면 알림으로
-                  <br />
-                  다시 확인할 수 있도록 준비하고 있어요.
-                </p>
-                <span className="feature-symbol">
-                  <Clock3 size={42} strokeWidth={1.3} />
-                </span>
-              </article>
-              <article>
-                <span className="feature-number">03 / 확인</span>
-                <h3>
-                  곁에 있지 못할 때도,
-                  <br />
-                  앱으로 함께 살펴요.
-                </h3>
-                <p>
-                  부모님의 약 준비 상태와 알림을
-                  <br />
-                  가족이 앱에서 확인하도록 만들고 있어요.
-                </p>
-                <span className="feature-symbol">
-                  <Smartphone size={42} strokeWidth={1.3} />
-                </span>
+              <article className="benefit-card">
+                <div className="benefit-copy">
+                  <h2>
+                    컵에 약이 남아 있으면,
+                    <br />
+                    <span>계속 알려드려요.</span>
+                  </h2>
+                  <p>깜빡해도 다시 알림.</p>
+                </div>
+                <CupIllustration reminder />
               </article>
             </div>
-            <p className="fine-print feature-disclaimer">
-              개발 중인 기능입니다. 컵에 남은 약의 감지는 실제 복용 여부를
-              확정하지 않으며, 약과 포장 형태에 따른 호환성은 검증 후
-              안내합니다.
+            <p className="fine-print benefits-note">
+              출시 준비 중인 기능입니다. 스마트컵 감지는 복용 확인을 돕지만 실제
+              복용 여부를 확정하지는 않습니다.
             </p>
           </div>
         </section>
-        <section className="connection section">
-          <div className="wrap connection-grid">
-            <div
-              className="app-preview"
-              role="img"
-              aria-label="보호자 앱의 알림 화면 예시"
-            >
-              <div className="preview-top">
-                <span>가족의 오늘</span>
-                <span>화면 예시</span>
-              </div>
-              <h3>엄마의 약 시간</h3>
-              <p>오늘도 차근차근, 함께 챙겨요.</p>
-              <div className="schedule-row">
-                <span className="schedule-check">
-                  <Check size={20} />
-                </span>
-                <div>
-                  <strong>아침 약 준비</strong>
-                  <span>오전 8:30 · 컵에 약을 담았어요</span>
-                </div>
-                <span className="state-tag">준비됨</span>
-              </div>
-              <div className="schedule-row">
-                <span className="schedule-clock">
-                  <Clock3 size={20} />
-                </span>
-                <div>
-                  <strong>점심 약 준비</strong>
-                  <span>오후 12:30 · 준비 예정이에요</span>
-                </div>
-              </div>
-              <div className="app-notice">
-                <BellRing size={20} />
-                <p>
-                  컵에 남은 약이 감지되면
+        <section
+          className="preparation-section"
+          aria-labelledby="preparation-title"
+        >
+          <div className="wrap preparation-grid">
+            <div className="preparation-copy">
+              <p className="eyebrow">매일의 복약을 더 간편하게</p>
+              <h2 id="preparation-title">
+                처방받은 약봉지,
+                <br />
+                <span>
+                  그대로 넣으면
                   <br />
-                  <strong>다시 확인할 수 있도록 알려드려요.</strong>
-                </p>
-              </div>
-              <p className="preview-caption">
-                개발 방향을 설명하기 위한 예시 화면입니다.
-              </p>
-            </div>
-            <div className="connection-copy">
-              <p className="eyebrow">멀리 있어도, 마음은 가까이</p>
-              <h2>
-                매번 묻기 어려웠던
-                <br />
-                “약은 챙겨 드셨어요?”
+                  자동으로 잘라 담아요.
+                </span>
               </h2>
-              <p>
-                부모님의 일상은 존중하면서,
-                <br />
-                필요한 순간에 함께 확인할 수 있도록.
-              </p>
-              <p>
-                기기와 스마트컵, 보호자 앱을 연결해
-                <br />
-                가족의 돌봄에 작은 여유를 더하려 해요.
-              </p>
-              <a className="text-link" href="/care">
-                추가로 준비 중인 돌봄 서비스 <ArrowUpRight size={18} />
-              </a>
+              <p className="preparation-price">월 49,800원</p>
             </div>
+            <ProductConcept preparation />
           </div>
         </section>
         <section className="launch-section">

@@ -1,0 +1,429 @@
+.restored-hero .hero-grid {
+  min-height: 700px;
+  padding-block: 60px;
+}
+.restored-hero h1 {
+  font-size: clamp(38px, 4vw, 56px);
+  letter-spacing: -0.05em;
+  line-height: 1.28;
+}
+.restored-hero .hero-description {
+  font-size: 23px;
+  font-weight: 600;
+  color: #475a70;
+  margin-top: 28px;
+}
+.restored-price {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 36px;
+}
+.restored-price strong,
+.preparation-price {
+  font-size: 27px;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 1.5;
+}
+.restored-price > span {
+  font-size: 13px;
+  color: #4b6689;
+  background: #e9eff7;
+  border-radius: 7px;
+  padding: 7px 10px;
+}
+.restored-hero .hero-actions {
+  margin-top: 22px;
+}
+.restored-features {
+  padding: 80px 0 56px;
+  background: #eef3f9;
+}
+.benefit-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+}
+.benefit-card {
+  background: #fff;
+  border: 1px solid #e4eaf3;
+  border-radius: 24px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.benefit-copy {
+  padding: 38px 38px 16px;
+  min-height: 246px;
+}
+.benefit-copy h2 {
+  font-size: 32px;
+  line-height: 1.4;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+}
+.benefit-copy h2 span,
+.preparation-copy h2 span {
+  color: #426ea9;
+}
+.benefit-copy p {
+  font-size: 18px;
+  color: #5d6b7c;
+  margin-top: 18px;
+  line-height: 1.7;
+}
+.benefit-copy .benefit-kicker {
+  font-size: 16px;
+  font-weight: 550;
+  margin: 0 0 12px;
+}
+.benefits-note {
+  margin-top: 22px;
+}
+.cup-illustration {
+  position: relative;
+  height: 310px;
+  margin-top: auto;
+  background: radial-gradient(ellipse at 50% 80%, #e5edf7, transparent 65%);
+  isolation: isolate;
+}
+.packet-row {
+  display: flex;
+  justify-content: center;
+  gap: 22px;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 12px;
+}
+.medicine-packet {
+  width: 80px;
+  height: 91px;
+  border-radius: 8px;
+  background: linear-gradient(130deg, #fff9, #e6edf49c);
+  border: 1px solid #d2dce9;
+  box-shadow: 2px 6px 12px #58719112;
+  position: relative;
+  transform: rotate(-14deg);
+}
+.medicine-packet:before,
+.medicine-packet:after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  right: 4px;
+  height: 5px;
+  background: repeating-linear-gradient(
+    90deg,
+    #d8e2ed 0px,
+    #d8e2ed 1px,
+    transparent 1px,
+    transparent 4px
+  );
+}
+.medicine-packet:before {
+  top: 5px;
+}
+.medicine-packet:after {
+  bottom: 5px;
+}
+.medicine-packet > span {
+  position: absolute;
+  top: 22px;
+  left: 15px;
+  right: 15px;
+  height: 3px;
+  background: #c4d1e1;
+  border-radius: 2px;
+}
+.medicine-packet i {
+  position: absolute;
+  top: 43px;
+  left: 20px;
+  width: 16px;
+  height: 28px;
+  border-radius: 12px;
+  background: linear-gradient(100deg, #fff, #dbe3eb);
+  box-shadow: 1px 2px 3px #77889e30;
+  transform: rotate(25deg);
+}
+.medicine-packet i:last-child {
+  left: 42px;
+  top: 47px;
+  transform: rotate(-15deg);
+}
+.packet-1 {
+  transform: translateY(-10px);
+}
+.packet-1 i {
+  height: 16px;
+  background: #dec995;
+  top: 50px;
+}
+.packet-2 {
+  transform: rotate(14deg);
+}
+.packet-2 i {
+  background: linear-gradient(#edca94 50%, #fff 50%);
+}
+.packet-path {
+  position: absolute;
+  top: 117px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 58px;
+}
+.packet-path span {
+  width: 2px;
+  height: 38px;
+  background: linear-gradient(#a8bbd4, transparent);
+  transform: rotate(-24deg);
+}
+.packet-path span:nth-child(2) {
+  transform: none;
+}
+.packet-path span:nth-child(3) {
+  transform: rotate(24deg);
+}
+.large-cup {
+  position: absolute;
+  top: 181px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 145px;
+  height: 87px;
+  border-radius: 10px 10px 53px 53px;
+  background: linear-gradient(105deg, #fff 8%, #eef3f8 55%, #d0dae7);
+  box-shadow:
+    inset -2px -3px 5px #b0bfd23a,
+    8px 12px 17px #4f6b8c14;
+  z-index: 2;
+}
+.cup-interior {
+  position: absolute;
+  top: -16px;
+  left: 0;
+  width: 145px;
+  height: 37px;
+  border: 6px solid #fff;
+  border-radius: 50%;
+  background: linear-gradient(#b0bed0, #e6edf6);
+  box-shadow: 0 -1px 1px #dae3ed;
+}
+.cup-interior i {
+  position: absolute;
+  left: 35px;
+  top: 6px;
+  width: 23px;
+  height: 11px;
+  transform: rotate(-24deg);
+  border-radius: 9px;
+  background: #fafbfc;
+  box-shadow: 1px 2px 2px #7f90a340;
+}
+.cup-interior i:nth-child(2) {
+  left: 64px;
+  top: 3px;
+  width: 14px;
+  height: 14px;
+  background: #dec995;
+}
+.cup-interior i:nth-child(3) {
+  left: 78px;
+  top: 12px;
+  transform: rotate(16deg);
+  background: linear-gradient(90deg, #e5bd86 50%, #fff 50%);
+}
+.cup-interior i:nth-child(4) {
+  left: 51px;
+  top: 13px;
+  transform: rotate(17deg);
+}
+.cup-interior i:nth-child(5) {
+  left: 20px;
+  top: 13px;
+  width: 12px;
+  height: 12px;
+  background: #cedbed;
+}
+.cup-shadow {
+  position: absolute;
+  left: 50%;
+  top: 260px;
+  transform: translateX(-50%);
+  width: 174px;
+  height: 21px;
+  background: #6b83a72e;
+  border-radius: 50%;
+  filter: blur(10px);
+  z-index: 1;
+}
+.cup-reminder .large-cup {
+  top: 172px;
+}
+.cup-reminder .cup-shadow {
+  top: 250px;
+}
+.reminder-signal {
+  position: absolute;
+  top: 29px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 64px;
+  height: 64px;
+  display: grid;
+  place-items: center;
+  background: #e6eefb;
+  border-radius: 50%;
+  color: #426ea9;
+}
+.signal-ring {
+  position: absolute;
+  inset: -14px;
+  border: 1px solid #d9e4f2;
+  border-radius: 50%;
+}
+.signal-ring.outer {
+  inset: -29px;
+  border-color: #e8eef7;
+}
+.reminder-label {
+  position: absolute;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #5d7290;
+  font-size: 13px;
+  white-space: nowrap;
+}
+.reminder-label > span {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #5b81b4;
+  margin-right: 7px;
+}
+.preparation-section {
+  background: #f7f9fc;
+  padding: 40px 0 60px;
+}
+.preparation-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+.preparation-copy h2 {
+  font-size: 42px;
+  line-height: 1.42;
+  font-weight: 720;
+  letter-spacing: -0.045em;
+}
+.preparation-price {
+  margin-top: 32px;
+}
+.preparation-section .product-scene {
+  height: 490px;
+}
+@media (max-width: 1050px) {
+  .benefit-copy {
+    padding: 28px 28px 12px;
+    min-height: 232px;
+  }
+  .benefit-copy h2 {
+    font-size: 28px;
+  }
+  .preparation-grid {
+    gap: 28px;
+  }
+  .preparation-copy h2 {
+    font-size: 34px;
+  }
+}
+@media (max-width: 760px) {
+  .restored-hero .hero-grid {
+    padding-block: 48px 24px;
+    gap: 18px;
+    min-height: 0;
+  }
+  .restored-hero h1 {
+    font-size: clamp(34px, 8.5vw, 48px);
+  }
+  .restored-hero .hero-description {
+    font-size: 20px;
+    margin-top: 22px;
+  }
+  .restored-price {
+    margin-top: 28px;
+  }
+  .restored-price strong,
+  .preparation-price {
+    font-size: 24px;
+  }
+  .restored-features {
+    padding: 48px 0 40px;
+  }
+  .benefit-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .benefit-copy {
+    padding: 28px 28px 8px;
+    min-height: 0;
+  }
+  .benefit-copy h2 {
+    font-size: 28px;
+  }
+  .benefit-copy p {
+    font-size: 17px;
+    margin-top: 14px;
+  }
+  .cup-illustration {
+    height: 300px;
+    margin-top: 24px;
+  }
+  .benefits-note {
+    font-size: 12px;
+    line-height: 1.8;
+  }
+  .preparation-section {
+    padding: 56px 0 30px;
+  }
+  .preparation-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .preparation-copy h2 {
+    font-size: clamp(28px, 7.4vw, 38px);
+  }
+  .preparation-price {
+    margin-top: 24px;
+  }
+  .preparation-section .product-scene {
+    height: 450px;
+  }
+  .preparation-copy .eyebrow {
+    font-size: 14px;
+  }
+}
+@media (max-width: 360px) {
+  .benefit-copy {
+    padding-inline: 22px;
+  }
+  .benefit-copy h2 {
+    font-size: 25px;
+  }
+  .packet-row {
+    gap: 15px;
+  }
+  .medicine-packet {
+    width: 70px;
+    height: 88px;
+  }
+  .preparation-section .product-scene {
+    height: 420px;
+  }
+}
