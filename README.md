@@ -27,7 +27,9 @@ node --import tsx server/_core/index.ts
 
 ## 출시 알림 저장
 
-신청은 기존 `launch.signup` API와 MySQL `launchSignups` 테이블에 저장됩니다. 운영 서버에 `DATABASE_URL`을 설정하고 `pnpm db:migrate`로 마이그레이션을 적용해야 합니다. 정적 파일만 배포하면 신청을 저장할 수 없습니다. 데이터베이스 미설정이나 저장 실패를 성공으로 표시하지 않습니다.
+신청 폼은 Supabase의 삽입 전용 함수 `submit_launch_signup`을 호출합니다. GitHub Pages처럼 정적 파일만 배포해도 Supabase에 이메일을 저장할 수 있습니다. 설정 방법과 권한 구성은 [`supabase/SETUP.md`](supabase/SETUP.md)를 참고하세요. Supabase 프로젝트에 SQL 마이그레이션을 적용하고 빌드 환경에 `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY`를 설정해야 합니다. 저장 실패를 성공으로 표시하지 않습니다.
+
+신청 목록은 Supabase Table Editor의 `public.launch_signups`에서 확인합니다. 브라우저 방문자는 목록을 읽거나 수정·삭제할 수 없습니다. 기존 Express/MySQL `launch.signup` API는 호환성을 위해 남아 있으나 현재 폼에서는 호출하지 않습니다.
 
 이메일 발송 작업은 이 저장 API에 포함되어 있지 않습니다. 실제 출시 메일 발송은 별도로 연결해야 합니다. 폼의 수집 목적·보관 기간은 기존 정책을 유지했습니다.
 
@@ -44,4 +46,6 @@ node --import tsx server/_core/index.ts
 - 이메일 팝업, 실제 저장 실패 안내, 모의 API 성공 안내, Escape와 버튼 초점 복원
 - FAQ 열기, `/about` 연결, 사용자 화면의 브랜드 텍스트 제거
 
-운영 데이터베이스가 제공되지 않아 실제 이메일 저장과 발송은 검증하지 않았습니다.
+Supabase `MOA` 프로젝트에 저장 테이블과 함수를 적용했습니다. 실제 API 저장, 중복 처리, 미동의 거절, 방문자의 목록 조회 차단과 로컬 폼의 실제 저장을 확인했습니다. 자동 테스트 13개와 TypeScript 검사, 정적 빌드가 통과했습니다. 공개 사이트는 아직 배포 전이며, 이메일 발송은 연결하지 않았습니다.
+
+`.env.production`에는 브라우저용 공개 URL과 publishable key만 포함됩니다. secret/service_role 키와 데이터베이스 비밀번호는 포함하지 않습니다.

@@ -9,7 +9,7 @@ import {
 } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { ArrowRight, Check, Mail, X } from "lucide-react";
-import { trpc } from "@/lib/trpc";
+import { saveLaunchSignup } from "@/lib/launch-signup";
 const LaunchContext = createContext<() => void>(() => {});
 export function LaunchButton() {
   const open = useContext(LaunchContext);
@@ -32,7 +32,8 @@ export function LaunchProvider({ children }: { children: ReactNode }) {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
   const trigger = useRef<HTMLElement | null>(null);
-  const signup = trpc.launch.signup.useMutation();
+  const [isPending, setIsPending] = useState(false);
+  const pending = useRef(false);
   const show = () => {
     trigger.current = document.activeElement as HTMLElement;
     setOpen(true);
@@ -50,17 +51,25 @@ export function LaunchProvider({ children }: { children: ReactNode }) {
   }, []);
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (signup.isPending) return;
+    if (pending.current) return;
     setError("");
     if (!consent) {
       setError("이메일 수집·이용에 동의해 주세요.");
       return;
     }
+    pending.current = true;
+    setIsPending(true);
     try {
-      await signup.mutateAsync({ email: email.trim(), consent });
+      await saveLaunchSignup(email, consent, {
+        url: import.meta.env.VITE_SUPABASE_URL ?? "",
+        publishableKey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY ?? "",
+      });
       setSubmitted(true);
     } catch {
       setError("신청을 저장하지 못했어요. 잠시 후 다시 시도해 주세요.");
+    } finally {
+      pending.current = false;
+      setIsPending(false);
     }
   }
   return (
@@ -154,10 +163,10 @@ export function LaunchProvider({ children }: { children: ReactNode }) {
                 )}
                 <button
                   type="submit"
-                  disabled={signup.isPending}
+                  disabled={isPending}
                   className="button primary full"
                 >
-                  {signup.isPending
+                  {isPending
                     ? "신청하고 있어요…"
                     : "무료로 출시 알림 받기"}
                   <ArrowRight size={18} aria-hidden="true" />
