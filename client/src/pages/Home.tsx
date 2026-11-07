@@ -2,6 +2,7 @@ import { ArrowUpRight, BellRing, Scissors } from "lucide-react";
 import { SiteLayout } from "@/components/MoaLayout";
 import { LaunchButton } from "@/components/LaunchDialog";
 import "./home-highlights.css";
+import PreparationIllustration from "@/components/PreparationIllustration";
 function ProductConcept({ preparation = false }: { preparation?: boolean }) {
   return (
     <figure className="product-scene">
@@ -183,7 +184,7 @@ export default function Home() {
               </h2>
               <p className="preparation-price">월 49,800원</p>
             </div>
-            <ProductConcept preparation />
+            <PreparationIllustration />
           </div>
         </section>
         <section className="launch-section">
