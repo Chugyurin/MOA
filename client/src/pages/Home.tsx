@@ -1,250 +1,236 @@
-import { useEffect, useState, type FormEvent } from "react";
-import { ArrowRight, BellRing, CheckCircle2, Mail } from "lucide-react";
+import {
+  ArrowDown,
+  ArrowUpRight,
+  BellRing,
+  Check,
+  Clock3,
+  Smartphone,
+} from "lucide-react";
 import { SiteLayout } from "@/components/MoaLayout";
-import { trpc } from "@/lib/trpc";
-
-const productImage = "/manus-storage/pasted_file_Fx42Ad_image_0050fba3.png";
-const pillsImage =
-  "/manus-storage/async-images/mmG3zYWXmo2YKdYfFIhoA8/image-1.webp";
-
-function SignupForm() {
-  const [email, setEmail] = useState("");
-  const [consent, setConsent] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
-  const [error, setError] = useState("");
-  const signup = trpc.launch.signup.useMutation();
-
-  async function submit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setError("");
-    if (!consent) {
-      setError("출시 안내를 위한 개인정보 수집·이용에 동의해 주세요.");
-      return;
-    }
-    try {
-      await signup.mutateAsync({ email: email.trim(), consent });
-      setSubmitted(true);
-    } catch {
-      setError("신청을 완료하지 못했습니다. 잠시 후 다시 시도해 주세요.");
-    }
-  }
-
-  if (submitted) {
-    return (
-      <div className="success-box" role="status">
-        <CheckCircle2 size={28} />
-        <div>
-          <strong>출시 알림 신청이 접수되었어요.</strong>
-          <p>MOA의 새로운 소식을 기다려 주세요.</p>
-        </div>
-      </div>
-    );
-  }
+import { LaunchButton } from "@/components/LaunchDialog";
+function ProductConcept() {
   return (
-    <form className="signup-form" onSubmit={submit}>
-      <label className="input-label" htmlFor="email">
-        이메일 주소
-      </label>
-      <div className="input-row">
-        <div className="email-wrap">
-          <Mail size={20} aria-hidden="true" />
-          <input
-            id="email"
-            name="email"
-            type="email"
-            autoComplete="email"
-            value={email}
-            onChange={event => setEmail(event.target.value)}
-            placeholder="이메일 주소를 입력해 주세요"
-            maxLength={254}
-            required
-          />
+    <figure className="product-scene">
+      <div className="scene-grid" aria-hidden="true" />
+      <div
+        className="device"
+        role="img"
+        aria-label="시간 표시창과 약을 담는 컵으로 구성된 복약 기기 콘셉트 일러스트"
+      >
+        <div className="device-top" />
+        <div className="device-display">
+          <span className="display-dot" />
+          아침 약 준비 시간<strong>08:30</strong>
+          <span>오늘도 편안한 하루 되세요</span>
         </div>
-        <button
-          className="button button-dark submit-button"
-          type="submit"
-          disabled={signup.isPending}
-        >
-          {signup.isPending ? "신청 중..." : "무료로 출시 알림 받기"}
-          <ArrowRight size={19} />
-        </button>
+        <div className="device-slot">
+          <div className="device-nozzle" />
+          <div className="medicine-cup">
+            <i />
+            <i />
+            <i />
+          </div>
+        </div>
+        <div className="device-foot" />
       </div>
-      <label className="consent">
-        <input
-          type="checkbox"
-          checked={consent}
-          onChange={event => setConsent(event.target.checked)}
-          required
-        />
-        <span>
-          <b>[필수]</b> 출시 안내를 위한 이메일 주소 수집·이용에 동의합니다.
+      <div className="scene-note">
+        <span className="note-icon">
+          <BellRing size={19} />
         </span>
-      </label>
-      {error && (
-        <p className="form-error" role="alert">
-          {error}
-        </p>
-      )}
-      <p className="form-note">
-        이메일은 출시 안내 종료 시까지 보관합니다. 동의를 거부할 수 있으며, 거부
-        시 알림 신청이 제한됩니다.
-      </p>
-    </form>
+        <div>
+          <strong>약 챙길 시간이에요</strong>
+          <span>한 번분을 컵에 준비해요</span>
+        </div>
+      </div>
+      <figcaption>
+        제품 이해를 돕는 콘셉트 일러스트 · 실제 제품과 다를 수 있습니다
+      </figcaption>
+    </figure>
   );
 }
-
 export default function Home() {
-  useEffect(() => {
-    if (window.location.hash === "#signup") {
-      requestAnimationFrame(() =>
-        document.getElementById("signup")?.scrollIntoView()
-      );
-    }
-  }, []);
   return (
     <SiteLayout>
-      <main className="reference-home">
-        <section className="hero" aria-labelledby="hero-title">
+      <main id="main">
+        <section className="hero">
           <div className="wrap hero-grid">
             <div className="hero-copy">
-              <p className="hero-kicker">부모님을 위한 스마트 복약 케어</p>
-              <h1 id="hero-title">
-                부모님 약,
+              <p className="eyebrow">
+                <span className="status-dot" />
+                스마트 복약 케어 · 출시 준비 중
+              </p>
+              <h1>
+                부모님의 약 시간,
                 <br />
-                <em>챙기기 힘드시죠?</em>
+                마음이 놓이는
+                <br />
+                <span>일상이 되도록.</span>
               </h1>
-              <p className="hero-description">이제 쉽게 관리하세요.</p>
-              <div className="hero-price">
-                <strong>월 49,800원</strong>
-                <span>출시 예정</span>
-              </div>
+              <p className="hero-description">
+                약을 준비하는 순간부터 확인까지.
+                <br />
+                부모님께는 간편함을, 가족에게는 안심을 더해요.
+              </p>
               <div className="hero-actions">
-                <a className="button button-dark" href="#signup">
-                  무료로 출시 알림 받기 <ArrowRight size={19} />
-                </a>
+                <LaunchButton />
+                <p className="quiet">
+                  신청은 무료예요. 구매나 결제로 이어지지 않아요.
+                </p>
               </div>
-              <p className="hero-note">신청은 무료이며 결제되지 않아요.</p>
+              <a className="text-link" href="#experience">
+                어떤 서비스인지 살펴보기 <ArrowDown size={17} />
+              </a>
             </div>
-            <div className="hero-visual">
-              <div className="product-image-wrap">
-                <img
-                  src={productImage}
-                  alt="약을 컵에 준비하는 MOA 스마트 복약 기기 디자인 시안"
-                />
-              </div>
-              <div className="image-caption">
-                <span>MOA SMART MEDICATION CARE</span>
-                <span>제품 디자인 시안</span>
-              </div>
-            </div>
+            <ProductConcept />
           </div>
         </section>
-
-        <section className="highlights" aria-label="MOA 핵심 기능">
+        <section id="experience" className="experience section">
           <div className="wrap">
-            <div className="highlight-grid">
-              <article className="highlight-card pills-card">
-                <div className="highlight-copy">
-                  <p>약 종류가 많아도,</p>
-                  <h2>
-                    먹어야 할 만큼,
-                    <br />
-                    <span>한 컵에.</span>
-                  </h2>
-                  <div className="highlight-description">
-                    자동으로 한 번분을 조합해요.
-                  </div>
-                </div>
-                <div className="highlight-image">
-                  <img
-                    src={pillsImage}
-                    alt="여러 약봉지의 약을 한 컵에 모으는 모습"
-                  />
-                </div>
+            <div className="section-heading">
+              <p className="eyebrow">매일 반복되는 일이니까</p>
+              <h2>
+                챙기는 수고는 덜고,
+                <br />
+                함께 살피는 마음은 더하고.
+              </h2>
+              <p>복잡한 약 관리를 돕는 세 가지 연결을 준비하고 있어요.</p>
+            </div>
+            <div className="feature-columns">
+              <article>
+                <span className="feature-number">01 / 준비</span>
+                <h3>
+                  여러 약봉지에서
+                  <br />한 번분을 한 컵으로.
+                </h3>
+                <p>
+                  설정한 시간에 약봉지를 열고,
+                  <br />
+                  먹어야 할 만큼 컵에 담도록 개발 중이에요.
+                </p>
+                <a className="text-link" href="/how">
+                  처음 이용하는 방법 <ArrowUpRight size={18} />
+                </a>
               </article>
-              <article className="highlight-card reminder-card">
-                <div className="highlight-copy">
-                  <h2>
-                    컵에 약이 남아 있으면,
-                    <br />
-                    <span>계속 알려드려요.</span>
-                  </h2>
-                  <div className="highlight-description">
-                    깜빡해도 다시 알림.
-                  </div>
-                </div>
-                <div className="highlight-image reminder-image">
-                  <img
-                    src={productImage}
-                    alt="MOA 기기의 스마트컵 디자인 시안"
-                  />
-                  <span className="reminder-badge" aria-hidden="true">
-                    <BellRing size={23} />
-                  </span>
-                </div>
+              <article>
+                <span className="feature-number">02 / 알림</span>
+                <h3>
+                  놓치기 쉬운 약 시간,
+                  <br />한 번 더 알려드려요.
+                </h3>
+                <p>
+                  컵에 약이 남아 있으면 알림으로
+                  <br />
+                  다시 확인할 수 있도록 준비하고 있어요.
+                </p>
+                <span className="feature-symbol">
+                  <Clock3 size={42} strokeWidth={1.3} />
+                </span>
+              </article>
+              <article>
+                <span className="feature-number">03 / 확인</span>
+                <h3>
+                  곁에 있지 못할 때도,
+                  <br />
+                  앱으로 함께 살펴요.
+                </h3>
+                <p>
+                  부모님의 약 준비 상태와 알림을
+                  <br />
+                  가족이 앱에서 확인하도록 만들고 있어요.
+                </p>
+                <span className="feature-symbol">
+                  <Smartphone size={42} strokeWidth={1.3} />
+                </span>
               </article>
             </div>
-            <p className="features-note">
-              출시 준비 중인 기능입니다. 스마트컵 감지는 복용 확인을 돕지만 실제
-              복용 여부를 확정하지는 않습니다.
+            <p className="fine-print feature-disclaimer">
+              개발 중인 기능입니다. 컵에 남은 약의 감지는 실제 복용 여부를
+              확정하지 않으며, 약과 포장 형태에 따른 호환성은 검증 후
+              안내합니다.
             </p>
           </div>
         </section>
-
-        <section className="closing" aria-labelledby="closing-title">
-          <div className="wrap closing-grid">
-            <div className="closing-copy">
-              <p className="section-label">매일의 복약을 더 간편하게</p>
-              <h2 id="closing-title">
-                처방받은 약봉지,
-                <br />
-                <span>
-                  그대로 넣으면
-                  <br />
-                  자동으로 잘라 담아요.
+        <section className="connection section">
+          <div className="wrap connection-grid">
+            <div
+              className="app-preview"
+              role="img"
+              aria-label="보호자 앱의 알림 화면 예시"
+            >
+              <div className="preview-top">
+                <span>가족의 오늘</span>
+                <span>화면 예시</span>
+              </div>
+              <h3>엄마의 약 시간</h3>
+              <p>오늘도 차근차근, 함께 챙겨요.</p>
+              <div className="schedule-row">
+                <span className="schedule-check">
+                  <Check size={20} />
                 </span>
-              </h2>
-              <p className="closing-price">월 49,800원</p>
-              <a className="button button-dark" href="#signup">
-                무료로 출시 알림 받기 <ArrowRight size={19} />
-              </a>
+                <div>
+                  <strong>아침 약 준비</strong>
+                  <span>오전 8:30 · 컵에 약을 담았어요</span>
+                </div>
+                <span className="state-tag">준비됨</span>
+              </div>
+              <div className="schedule-row">
+                <span className="schedule-clock">
+                  <Clock3 size={20} />
+                </span>
+                <div>
+                  <strong>점심 약 준비</strong>
+                  <span>오후 12:30 · 준비 예정이에요</span>
+                </div>
+              </div>
+              <div className="app-notice">
+                <BellRing size={20} />
+                <p>
+                  컵에 남은 약이 감지되면
+                  <br />
+                  <strong>다시 확인할 수 있도록 알려드려요.</strong>
+                </p>
+              </div>
+              <p className="preview-caption">
+                개발 방향을 설명하기 위한 예시 화면입니다.
+              </p>
             </div>
-            <div className="closing-image">
-              <img
-                src={productImage}
-                alt="약이 담긴 MOA 스마트컵 디자인 시안"
-              />
+            <div className="connection-copy">
+              <p className="eyebrow">멀리 있어도, 마음은 가까이</p>
+              <h2>
+                매번 묻기 어려웠던
+                <br />
+                “약은 챙겨 드셨어요?”
+              </h2>
+              <p>
+                부모님의 일상은 존중하면서,
+                <br />
+                필요한 순간에 함께 확인할 수 있도록.
+              </p>
+              <p>
+                기기와 스마트컵, 보호자 앱을 연결해
+                <br />
+                가족의 돌봄에 작은 여유를 더하려 해요.
+              </p>
+              <a className="text-link" href="/care">
+                추가로 준비 중인 돌봄 서비스 <ArrowUpRight size={18} />
+              </a>
             </div>
           </div>
         </section>
-
-        <section
-          id="signup"
-          className="signup-section"
-          aria-labelledby="signup-title"
-        >
-          <div className="wrap signup-grid">
-            <div className="signup-intro">
-              <p className="section-label">MOA를 가장 먼저 만나보세요</p>
-              <h2 id="signup-title">
-                무료로 출시 소식을
-                <br />
-                <span>받아보세요.</span>
-              </h2>
-              <p>신청해도 구매나 결제는 이루어지지 않아요.</p>
-            </div>
-            <div className="signup-box">
-              <div className="signup-box-head">
-                <div>
-                  <strong>무료 출시 알림 신청</strong>
-                  <span>이메일로 출시 소식을 알려드릴게요.</span>
-                </div>
-                <span className="signup-price">
-                  월 <b>49,800</b>원
-                </span>
-              </div>
-              <SignupForm />
-            </div>
+        <section className="launch-section">
+          <div className="wrap launch-inner">
+            <p className="eyebrow">더 편안한 약 관리의 시작</p>
+            <h2>
+              출시 소식,
+              <br />
+              가장 먼저 전해드릴게요.
+            </h2>
+            <p>이메일 하나로 새로운 소식을 받아보세요.</p>
+            <LaunchButton />
+            <span className="quiet">무료 알림 신청 · 결제 정보 입력 없이</span>
+            <a className="text-link" href="/price">
+              예정 요금과 자주 묻는 질문 <ArrowUpRight size={17} />
+            </a>
           </div>
         </section>
       </main>

@@ -1,9 +1,8 @@
 {
   "routes": [
-    { "path": "/", "title": "MOA — 부모님을 위한 스마트 복약 케어" },
-    { "path": "/about", "title": "MOA 소개" },
+    { "path": "/", "title": "부모님을 위한 스마트 복약 케어" },
     { "path": "/how", "title": "이용 방법" },
-    { "path": "/care", "title": "돌봄 서비스" },
-    { "path": "/price", "title": "이용 안내" }
+    { "path": "/care", "title": "추가 돌봄" },
+    { "path": "/price", "title": "요금·자주 묻는 질문" }
   ]
 }
