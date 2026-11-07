@@ -182,7 +182,6 @@ export default function Home() {
                   자동으로 잘라 담아요.
                 </span>
               </h2>
-              <p className="preparation-price">월 49,800원</p>
             </div>
             <PreparationIllustration />
           </div>
