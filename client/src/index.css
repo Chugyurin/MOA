@@ -1163,7 +1163,7 @@ html {
   word-break: keep-all;
 }
 .offer-amount {
-  font-size: calc(1em + 2px);
+  font-size: calc(1em + 4px);
 }
 .launch-modal .offer-countdown {
   margin-bottom: 12px;

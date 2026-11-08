@@ -23,7 +23,8 @@ function LaunchOfferContent() {
     <span className="offer-title">
       {seconds > 0 ? (
         <>
-          지금 알림 신청하면 <span className="offer-amount">20,000원</span> 할인
+          지금 알림 신청하면 <span className="offer-amount">20,000원</span>{" "}
+          <span className="offer-amount">할인</span>
         </>
       ) : (
         "출시 알림 신청하기"
