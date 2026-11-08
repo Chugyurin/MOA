@@ -1,6 +1,6 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { Menu, X } from "lucide-react";
-import { LaunchButton, LaunchProvider } from "./LaunchDialog";
+import { LaunchButton, LaunchCountdown, LaunchProvider } from "./LaunchDialog";
 import { sitePath } from "@/lib/site-path";
 type PageName = "about" | "how" | "care" | "price";
 const links = [
@@ -82,7 +82,10 @@ export function SiteLayout({
           role="region"
           aria-label="무료 출시 알림 신청"
         >
-          <LaunchButton />
+          <div className="launch-action-panel">
+            <LaunchCountdown />
+            <LaunchButton />
+          </div>
         </div>
       </div>
     </LaunchProvider>

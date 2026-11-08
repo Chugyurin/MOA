@@ -1,6 +1,6 @@
 # Supabase 출시 알림 연결
 
-1. Supabase 프로젝트의 SQL Editor에서 `migrations/202611070001_launch_signups.sql`을 실행합니다.
+1. Supabase 프로젝트의 SQL Editor에서 `migrations/202611070001_launch_signups.sql`을 실행한 뒤 `migrations/202611080001_launch_signup_count.sql`을 실행합니다.
 2. 프로젝트 URL과 **publishable key**를 프로젝트 루트 `.env.local`에 설정합니다. `.env.example`을 참고하세요. secret/service_role 키는 사용하지 않습니다.
 3. 개발 서버를 다시 실행하거나 정적 사이트를 다시 빌드합니다. GitHub Actions 빌드에는 `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY`를 환경변수로 전달해야 합니다.
 4. 실제 폼에서 테스트 이메일을 제출한 다음 Supabase Table Editor → `public.launch_signups`에서 저장을 확인합니다.
