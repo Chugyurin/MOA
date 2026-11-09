@@ -9,6 +9,12 @@ import {
 } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { ArrowRight, Check, Mail, X } from "lucide-react";
+import { parseLaunchContact } from "@shared/launchContact";
+import {
+  launchAnalytics,
+  type EventDetails,
+  type LaunchEvent,
+} from "@/lib/launch-analytics";
 import { saveLaunchSignup, getLaunchSignupCount } from "@/lib/launch-signup";
 import {
   INITIAL_LAUNCH_SUBSCRIBERS,
@@ -49,12 +55,28 @@ export function LaunchCountdown() {
 }
 export function LaunchButton() {
   const open = useContext(LaunchContext);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    if (!buttonRef.current) return;
+    const observer = new IntersectionObserver(
+      entries => {
+        if (entries.some(e => e.isIntersecting)) {
+          launchAnalytics().track("cta_view", { source: "launch_dock" });
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.5 }
+    );
+    observer.observe(buttonRef.current);
+    return () => observer.disconnect();
+  }, []);
   return (
     <button
       type="button"
       className="button primary offer-button"
       aria-haspopup="dialog"
-      onClick={open}
+      ref={buttonRef}
+      onClick={() => open()}
     >
       <LaunchOfferContent />
       <ArrowRight size={18} aria-hidden="true" />
@@ -84,7 +106,7 @@ export function LaunchProvider({ children }: { children: ReactNode }) {
       window.removeEventListener("focus", refresh);
     };
   }, []);
-  const [email, setEmail] = useState("");
+  const [contact, setContact] = useState("");
   const [consent, setConsent] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
@@ -117,43 +139,183 @@ export function LaunchProvider({ children }: { children: ReactNode }) {
       clearInterval(interval);
     };
   }, [open, submitted]);
-  const show = () => {
+  const flow = useRef(crypto.randomUUID());
+  const openingTime = useRef(Date.now());
+  const started = useRef(false);
+  const validTypes = useRef(new Set<string>());
+  const attempts = useRef(0);
+  const failed = useRef(false);
+  const current = useRef({ open, contact, consent, submitted });
+  current.current = { open, contact, consent, submitted };
+  const source = useRef<"launch_dock" | "hash">("launch_dock");
+  const closeReason = useRef<EventDetails["reason"]>("outside");
+  const successEvent = useRef<{ contact: string; event: LaunchEvent } | null>(
+    null
+  );
+  const details = (): EventDetails => ({
+    flow_id: flow.current,
+    source: source.current,
+    contact_type:
+      parseLaunchContact(current.current.contact)?.type ?? "unknown",
+    consent: current.current.consent,
+    attempt: Math.min(attempts.current, 100),
+    elapsed_ms: Math.min(
+      Math.max(0, Date.now() - openingTime.current),
+      86400000
+    ),
+  });
+  const show = (entry: "launch_dock" | "hash" = "launch_dock") => {
+    if (pending.current || current.current.open) {
+      if (entry === "launch_dock")
+        launchAnalytics().track("cta_click", details());
+      return;
+    }
     trigger.current = document.activeElement as HTMLElement;
+    flow.current = crypto.randomUUID();
+    openingTime.current = Date.now();
+    started.current = false;
+    validTypes.current.clear();
+    attempts.current = 0;
+    failed.current = false;
+    successEvent.current = null;
+    source.current = entry;
+    closeReason.current = "outside";
     setSubmitted(false);
-    setEmail("");
+    setContact("");
     setConsent(false);
     setError("");
+    current.current = {
+      open: true,
+      contact: "",
+      consent: false,
+      submitted: false,
+    };
     setOpen(true);
+    if (entry === "launch_dock")
+      launchAnalytics().track("cta_click", details());
+    launchAnalytics().track("dialog_open", details());
   };
   useEffect(() => {
+    const analytics = launchAnalytics();
+    analytics.track("page_view");
     const checkHash = () => {
       if (location.hash === "#signup") {
-        setSubmitted(false);
-        setEmail("");
-        setConsent(false);
-        setError("");
-        setOpen(true);
+        show("hash");
         history.replaceState(null, "", location.pathname + location.search);
       }
     };
+    const visibility = () => {
+      if (document.visibilityState === "hidden") {
+        if (current.current.open)
+          analytics.track("dialog_interrupted", {
+            ...details(),
+            reason: "hidden",
+          });
+        void analytics.flush(true);
+      }
+    };
+    const pagehide = () => {
+      if (current.current.open)
+        analytics.track("dialog_interrupted", {
+          ...details(),
+          reason: "pagehide",
+        });
+      void analytics.flush(true);
+    };
+    const online = () => {
+      void analytics.flush();
+    };
     checkHash();
     window.addEventListener("hashchange", checkHash);
-    return () => window.removeEventListener("hashchange", checkHash);
+    window.addEventListener("online", online);
+    window.addEventListener("pagehide", pagehide);
+    document.addEventListener("visibilitychange", visibility);
+    return () => {
+      window.removeEventListener("hashchange", checkHash);
+      window.removeEventListener("online", online);
+      window.removeEventListener("pagehide", pagehide);
+      document.removeEventListener("visibilitychange", visibility);
+    };
   }, []);
+  function changeContact(value: string) {
+    setContact(value);
+    current.current.contact = value;
+    if (value.trim() && !started.current) {
+      started.current = true;
+      launchAnalytics().track("contact_input_started", details());
+    }
+    const kind = parseLaunchContact(value)?.type;
+    if (kind && !validTypes.current.has(kind)) {
+      validTypes.current.add(kind);
+      launchAnalytics().track("contact_valid", details());
+    }
+    if (error) setError("");
+  }
+  function changeOpen(next: boolean) {
+    if (!next && current.current.open) {
+      launchAnalytics().track("dialog_closed", {
+        ...details(),
+        reason: current.current.submitted ? "completed" : closeReason.current,
+      });
+      current.current.open = false;
+    }
+    setOpen(next);
+  }
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (pending.current) return;
+    attempts.current += 1;
+    const analytics = launchAnalytics();
+    analytics.track("submit_attempt", details());
     setError("");
-    if (!consent) {
-      setError("이메일 수집·이용에 동의해 주세요.");
+    const normalized = parseLaunchContact(contact);
+    if (!normalized || !consent) {
+      const reason = !normalized ? "contact_invalid" : "consent_required";
+      analytics.track("validation_error", { ...details(), reason });
+      setError(
+        !normalized
+          ? "이메일 또는 전화번호를 정확히 입력해 주세요."
+          : "연락처 수집·이용에 동의해 주세요."
+      );
+      document
+        .getElementById(!normalized ? "launch-contact" : "launch-consent")
+        ?.focus();
       return;
+    }
+    if (failed.current) analytics.track("submit_retry", details());
+    analytics.track("submit_started", details());
+    const normalizedKey = normalized.type + ":" + normalized.value;
+    if (
+      !successEvent.current ||
+      successEvent.current.contact !== normalizedKey
+    ) {
+      successEvent.current = {
+        contact: normalizedKey,
+        event: analytics.event("submit_success", details()),
+      };
     }
     pending.current = true;
     setIsPending(true);
     try {
-      await saveLaunchSignup(email, consent, signupConfig);
+      await saveLaunchSignup(
+        contact,
+        consent,
+        signupConfig,
+        fetch,
+        successEvent.current.event
+      );
+      current.current.submitted = true;
       setSubmitted(true);
-    } catch {
+      failed.current = false;
+    } catch (cause) {
+      failed.current = true;
+      analytics.track("submit_failed", {
+        ...details(),
+        reason:
+          cause instanceof Error && cause.name === "TimeoutError"
+            ? "save_timeout"
+            : "save_failed",
+      });
       setError("신청을 저장하지 못했어요. 잠시 후 다시 시도해 주세요.");
     } finally {
       pending.current = false;
@@ -164,13 +326,19 @@ export function LaunchProvider({ children }: { children: ReactNode }) {
     <OfferCountdownContext.Provider value={remaining}>
       <LaunchContext.Provider value={show}>
         {children}
-        <Dialog.Root open={open} onOpenChange={setOpen}>
+        <Dialog.Root open={open} onOpenChange={changeOpen}>
           <Dialog.Portal>
             <Dialog.Overlay className="modal-overlay" />
             <Dialog.Content
               className="launch-modal"
+              onEscapeKeyDown={() => {
+                closeReason.current = "escape";
+              }}
+              onPointerDownOutside={() => {
+                closeReason.current = "outside";
+              }}
               onOpenAutoFocus={event => {
-                const input = document.getElementById("launch-email");
+                const input = document.getElementById("launch-contact");
                 if (input) {
                   event.preventDefault();
                   input.focus();
@@ -181,7 +349,13 @@ export function LaunchProvider({ children }: { children: ReactNode }) {
                 trigger.current?.focus();
               }}
             >
-              <Dialog.Close className="close-button" aria-label="팝업 닫기">
+              <Dialog.Close
+                className="close-button"
+                aria-label="팝업 닫기"
+                onClick={() => {
+                  closeReason.current = "close_button";
+                }}
+              >
                 <X size={22} />
               </Dialog.Close>
               <span
@@ -197,29 +371,39 @@ export function LaunchProvider({ children }: { children: ReactNode }) {
               </Dialog.Title>
               <Dialog.Description>
                 {submitted
-                  ? "출시 알림 신청이 완료되었어요. 입력하신 이메일로 안내해 드릴게요."
-                  : "이메일을 남겨주시면 출시 소식을 알려드려요. 신청은 무료이며, 결제되지 않아요."}
+                  ? "출시 알림 신청이 완료되었어요. 남겨주신 연락처로 안내해 드릴게요."
+                  : "이메일 또는 전화번호를 남겨주시면 출시 소식을 알려드려요. 신청은 무료이며, 결제되지 않아요."}
               </Dialog.Description>
               {submitted ? (
                 <Dialog.Close className="button primary full">
                   확인했어요
                 </Dialog.Close>
               ) : (
-                <form onSubmit={submit}>
-                  <label className="field-label" htmlFor="launch-email">
-                    이메일 주소
+                <form onSubmit={submit} noValidate>
+                  <label className="field-label" htmlFor="launch-contact">
+                    이메일 또는 전화번호
                   </label>
                   <input
-                    id="launch-email"
-                    type="email"
-                    name="email"
-                    autoComplete="email"
-                    inputMode="email"
-                    placeholder="name@example.com"
+                    id="launch-contact"
+                    type="text"
+                    name="contact"
+                    autoComplete="off"
+                    inputMode="text"
+                    placeholder="이메일 또는 전화번호"
                     maxLength={254}
                     required
-                    value={email}
-                    onChange={e => setEmail(e.target.value)}
+                    value={contact}
+                    disabled={isPending}
+                    aria-invalid={
+                      Boolean(error) && !parseLaunchContact(contact)
+                    }
+                    onChange={e => changeContact(e.target.value)}
+                    onFocus={() =>
+                      launchAnalytics().track("contact_focus", details())
+                    }
+                    onBlur={() =>
+                      launchAnalytics().track("contact_blur", details())
+                    }
                     aria-describedby={
                       error ? "signup-error signup-policy" : "signup-policy"
                     }
@@ -227,14 +411,20 @@ export function LaunchProvider({ children }: { children: ReactNode }) {
                   <label className="consent">
                     <input
                       type="checkbox"
+                      id="launch-consent"
                       checked={consent}
-                      onChange={e => setConsent(e.target.checked)}
+                      disabled={isPending}
+                      onChange={e => {
+                        setConsent(e.target.checked);
+                        current.current.consent = e.target.checked;
+                        launchAnalytics().track("consent_changed", details());
+                      }}
                       required
                     />
-                    <span>[필수] 출시 안내를 위한 이메일 수집·이용 동의</span>
+                    <span>[필수] 출시 안내를 위한 연락처 수집·이용 동의</span>
                   </label>
                   <p id="signup-policy" className="fine-print">
-                    수집 항목: 이메일 · 이용 목적: 출시 안내
+                    수집 항목: 이메일 또는 전화번호 · 이용 목적: 출시 안내
                     <br />
                     보관 기간: 출시 안내 종료 시까지. 동의를 거부할 수 있으며,
                     거부 시 알림 신청이 제한됩니다.

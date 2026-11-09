@@ -16,11 +16,11 @@ describe("Supabase launch signup", () => {
       .mockResolvedValue(new Response(JSON.stringify({ ok: true })));
     await saveLaunchSignup(" HELLO@example.com ", true, config, request);
     expect(request).toHaveBeenCalledWith(
-      "https://test-project.supabase.co/rest/v1/rpc/submit_launch_signup",
+      "https://test-project.supabase.co/rest/v1/rpc/submit_launch_contact",
       expect.objectContaining({
         method: "POST",
         credentials: "omit",
-        body: JSON.stringify({ p_email: "hello@example.com", p_consent: true }),
+        body: JSON.stringify({ p_contact: "hello@example.com", p_consent: true }),
         headers: {
           "Content-Type": "application/json",
           apikey: "sb_publishable_test",

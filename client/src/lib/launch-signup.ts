@@ -1,18 +1,17 @@
+import { parseLaunchContact } from "@shared/launchContact";
+import type { LaunchEvent } from "./launch-analytics";
 export type SignupConfig = { url: string; publishableKey: string };
 
 export async function saveLaunchSignup(
-  email: string,
+  contact: string,
   consent: boolean,
   config: SignupConfig,
-  request: typeof fetch = fetch
+  request: typeof fetch = fetch,
+  successEvent?: LaunchEvent
 ) {
-  const normalized = email.trim().toLowerCase();
-  if (
-    !consent ||
-    normalized.length > 254 ||
-    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalized)
-  ) {
-    throw new Error("올바른 이메일과 수집 동의가 필요합니다.");
+  const normalized = parseLaunchContact(contact);
+  if (!consent || !normalized) {
+    throw new Error("올바른 이메일 또는 전화번호와 수집 동의가 필요합니다.");
   }
   const url = new URL(config.url);
   if (
@@ -23,14 +22,18 @@ export async function saveLaunchSignup(
     throw new Error("출시 알림 연결 설정을 확인해 주세요.");
   }
   const response = await request(
-    `${url.origin}/rest/v1/rpc/submit_launch_signup`,
+    `${url.origin}/rest/v1/rpc/submit_launch_contact`,
     {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         apikey: config.publishableKey,
       },
-      body: JSON.stringify({ p_email: normalized, p_consent: consent }),
+      body: JSON.stringify({
+        p_contact: normalized.value,
+        p_consent: consent,
+        ...(successEvent ? { p_context: successEvent } : {}),
+      }),
       signal: AbortSignal.timeout(15000),
       credentials: "omit",
     }

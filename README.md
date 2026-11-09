@@ -10,7 +10,7 @@ React / Express / tRPC / Drizzle 기반 랜딩페이지입니다.
 - `/price`: 예정 요금, 확정 전 조건과 FAQ
 - `/about`: 중복 소개 페이지를 제거하고 메인으로 연결
 
-메인과 세부 페이지의 출시 알림 버튼은 화면 하단의 고정 버튼 하나로 통합했습니다. 버튼은 스크롤 중에도 표시되며 이메일 팝업을 엽니다. 모바일 안전 영역과 페이지 끝 여백을 확보했습니다. 필수 동의, 입력 검증, 전송 중 상태, 실패 재시도, 성공 안내를 제공하며 Escape와 초점 복원을 지원합니다.
+메인과 세부 페이지의 출시 알림 버튼은 화면 하단의 고정 버튼 하나로 통합했습니다. 버튼은 스크롤 중에도 표시되며 연락처 팝업을 엽니다. 모바일 안전 영역과 페이지 끝 여백을 확보했습니다. 필수 동의, 입력 검증, 전송 중 상태, 실패 재시도, 성공 안내를 제공하며 Escape와 초점 복원을 지원합니다.
 
 ## 실행과 검증
 
@@ -27,7 +27,7 @@ node --import tsx server/_core/index.ts
 
 ## 출시 알림 저장
 
-신청 폼은 Supabase의 삽입 전용 함수 `submit_launch_signup`을 호출합니다. GitHub Pages처럼 정적 파일만 배포해도 Supabase에 이메일을 저장할 수 있습니다. 설정 방법과 권한 구성은 [`supabase/SETUP.md`](supabase/SETUP.md)를 참고하세요. Supabase 프로젝트에 SQL 마이그레이션을 적용하고 빌드 환경에 `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY`를 설정해야 합니다. 저장 실패를 성공으로 표시하지 않습니다.
+신청 폼은 Supabase의 삽입 전용 함수 `submit_launch_contact`를 호출합니다. GitHub Pages처럼 정적 파일만 배포해도 Supabase에 이메일 또는 전화번호를 저장할 수 있습니다. 설정 방법과 권한 구성은 [`supabase/SETUP.md`](supabase/SETUP.md)를 참고하세요. Supabase 프로젝트에 SQL 마이그레이션을 적용하고 빌드 환경에 `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY`를 설정해야 합니다. 저장 실패를 성공으로 표시하지 않습니다.
 
 신청 목록은 Supabase Table Editor의 `public.launch_signups`에서 확인합니다. 브라우저 방문자는 목록을 읽거나 수정·삭제할 수 없습니다. 기존 Express/MySQL `launch.signup` API는 호환성을 위해 남아 있으나 현재 폼에서는 호출하지 않습니다.
 
@@ -43,10 +43,10 @@ node --import tsx server/_core/index.ts
 
 - TypeScript 검사, 프런트엔드·서버 빌드, 기존 테스트 6개 통과
 - Chrome 320 / 390 / 768 / 1440px에서 메인·세부 페이지 가로 넘침 검사
-- 이메일 팝업, 실제 저장 실패 안내, 모의 API 성공 안내, Escape와 버튼 초점 복원
+- 연락처 팝업, 실제 저장 실패 안내, 모의 API 성공 안내, Escape와 버튼 초점 복원
 - FAQ 열기, `/about` 연결, 사용자 화면의 브랜드 텍스트 제거
 
-Supabase `MOA` 프로젝트에 저장 테이블과 함수를 적용했습니다. 실제 API 저장, 중복 처리, 미동의 거절, 방문자의 목록 조회 차단과 로컬 폼의 실제 저장을 확인했습니다. 자동 테스트 13개와 TypeScript 검사, 정적 빌드가 통과했습니다. 공개 사이트는 아직 배포 전이며, 이메일 발송은 연결하지 않았습니다.
+Supabase `MOA` 프로젝트에 저장 테이블과 함수를 적용했습니다. 실제 API 저장, 중복 처리, 미동의 거절, 방문자의 목록 조회 차단과 로컬 폼의 실제 저장을 확인했습니다. 자동 테스트 40개와 TypeScript 검사, 정적 빌드가 통과했습니다. 공개 사이트는 GitHub Actions로 배포하며, 이메일/SMS 발송은 연결하지 않았습니다.
 
 `.env.production`에는 브라우저용 공개 URL과 publishable key만 포함됩니다. secret/service_role 키와 데이터베이스 비밀번호는 포함하지 않습니다.
 
@@ -54,4 +54,8 @@ Supabase `MOA` 프로젝트에 저장 테이블과 함수를 적용했습니다.
 
 한국시간 2026-11-09 18:00까지 남은 시간을 하단 고정 영역과 신청 팝업에 표시합니다. 마감되면 할인 문구가 일반 출시 알림 신청으로 바뀝니다.
 
-화면의 시작 숫자 1,168명은 캠페인 기준값입니다. `supabase/migrations/202611080001_launch_signup_count.sql`을 기존 출시 알림 마이그레이션 다음에 실행하면, 기존 행은 기준값에 포함되고 이후 새로 저장되는 고유 이메일만 1명씩 추가됩니다. 방문자에게는 총 숫자만 공개되고 이메일 목록은 계속 비공개입니다. 이 마이그레이션을 운영 Supabase에 적용해야 숫자 자동 갱신이 작동합니다.
+화면의 시작 숫자 1,168명은 캠페인 기준값입니다. `supabase/migrations/202611080001_launch_signup_count.sql`을 기존 출시 알림 마이그레이션 다음에 실행하면, 기존 행은 기준값에 포함되고 이후 새로 저장되는 고유 연락처만 1명씩 추가됩니다. 방문자에게는 총 숫자만 공개되고 연락처 목록은 계속 비공개입니다. 이 마이그레이션을 운영 Supabase에 적용해야 숫자 자동 갱신이 작동합니다.
+
+## 연락처와 전환 이벤트
+
+이메일 또는 전화번호로 신청할 수 있습니다. 이벤트 정의, 입력 시작/중복 처리 기준, 일별 통계 확인 방법은 [`docs/launch-funnel.md`](docs/launch-funnel.md)를 참고하세요. `supabase/migrations/202611090001_launch_funnel_contacts.sql`은 기존 이메일을 유지하면서 전화번호와 전환 이벤트 저장을 추가합니다. 행동 기록은 `launch_events`, 실제 집계는 `launch_event_counts`, 연락처는 `launch_signups`에 분리됩니다. QA 기록은 실제 통계에서 제외합니다.

@@ -191,7 +191,7 @@ export default function Home() {
               <br />
               가장 먼저 전해드릴게요.
             </h2>
-            <p>이메일 하나로 새로운 소식을 받아보세요.</p>
+            <p>연락처 하나로 새로운 소식을 받아보세요.</p>
             <span className="quiet">무료 알림 신청 · 결제 정보 입력 없이</span>
             <a className="text-link" href={sitePath("/price")}>
               예정 요금과 자주 묻는 질문 <ArrowUpRight size={17} />
