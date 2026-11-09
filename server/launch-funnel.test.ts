@@ -43,6 +43,19 @@ describe("contact normalization", () => {
   });
 });
 describe("event transport", () => {
+  it("calls browser fetch without the collector as its receiver", async () => {
+    vi.useFakeTimers();
+    let receiver: unknown = "not-called";
+    const send = function(this: unknown) {
+      receiver = this;
+      return Promise.resolve(new Response('{"ok":true}'));
+    } as typeof fetch;
+    const analytics = new LaunchAnalytics(config, send);
+    analytics.track("cta_click");
+    await analytics.flush();
+    expect(receiver).toBeUndefined();
+  });
+
   it("never includes arbitrary contact or query data", async () => {
     vi.useFakeTimers();
     const request = vi.fn().mockResolvedValue(new Response('{"ok":true}'));

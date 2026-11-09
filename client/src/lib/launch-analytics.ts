@@ -158,7 +158,10 @@ export class LaunchAnalytics {
     const ids = new Set(batch.map(e => e.event_id));
     this.sending = true;
     try {
-      const response = await this.request(
+      // Native Window.fetch must be called as a plain function, not with this
+      // collector as its receiver. Dev wrappers can otherwise hide this failure.
+      const send = this.request;
+      const response = await send(
         `${this.config.url.replace(/\/$/, "")}/rest/v1/rpc/record_launch_events`,
         {
           method: "POST",
