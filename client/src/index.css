@@ -736,20 +736,38 @@ img {
   margin-bottom: 28px;
 }
 .field-label {
-  font-size: 14px;
-  font-weight: 650;
-  display: block;
-  margin-bottom: 10px;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
-.launch-modal input[type="email"] {
+.launch-modal input[name="contact"] {
   width: 100%;
-  min-height: 54px;
-  border: 1px solid #c7d1de;
-  border-radius: 12px;
-  padding: 14px 16px;
+  min-height: 62px;
+  border: 1px solid #d6e7f7;
+  border-radius: 14px;
+  padding: 17px 18px;
   font-size: 16px;
-  background: #fff;
+  line-height: 1.5;
+  background: #f0f7ff;
   color: var(--ink);
+  transition: background-color 0.18s ease, border-color 0.18s ease,
+    box-shadow 0.18s ease;
+}
+.launch-modal input[name="contact"]:hover {
+  border-color: #b7d3ed;
+}
+.launch-modal input[name="contact"]:focus,
+.launch-modal input[name="contact"]:focus-visible {
+  outline: none;
+  border-color: #4a84d8;
+  background: #f6faff;
+  box-shadow: 0 0 0 3px #dcecff;
 }
 .launch-modal input::placeholder {
   color: #798697;
