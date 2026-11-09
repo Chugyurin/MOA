@@ -379,7 +379,27 @@ export function LaunchProvider({ children }: { children: ReactNode }) {
                   확인했어요
                 </Dialog.Close>
               ) : (
-                <form onSubmit={submit} noValidate>
+                <form
+                  onSubmit={submit}
+                  onKeyDown={event => {
+                    if (
+                      event.key !== "Enter" ||
+                      event.repeat ||
+                      event.nativeEvent.isComposing ||
+                      !(event.target instanceof HTMLInputElement) ||
+                      !["launch-contact", "launch-consent"].includes(
+                        event.target.id
+                      ) ||
+                      !parseLaunchContact(current.current.contact) ||
+                      !current.current.consent ||
+                      pending.current
+                    )
+                      return;
+                    event.preventDefault();
+                    event.currentTarget.requestSubmit();
+                  }}
+                  noValidate
+                >
                   <label className="field-label" htmlFor="launch-contact">
                     이메일 또는 전화번호
                   </label>
