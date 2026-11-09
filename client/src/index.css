@@ -747,6 +747,8 @@ img {
   border: 0;
 }
 .launch-modal input[name="contact"] {
+  position: relative;
+  top: -4px;
   width: 100%;
   min-height: 62px;
   border: 1px solid #d6e7f7;
@@ -754,7 +756,7 @@ img {
   padding: 17px 18px;
   font-size: 16px;
   line-height: 1.5;
-  background: #f0f7ff;
+  background: #f5faff;
   color: var(--ink);
   transition: background-color 0.18s ease, border-color 0.18s ease,
     box-shadow 0.18s ease;
@@ -766,7 +768,7 @@ img {
 .launch-modal input[name="contact"]:focus-visible {
   outline: none;
   border-color: #4a84d8;
-  background: #f6faff;
+  background: #f5faff;
   box-shadow: 0 0 0 3px #dcecff;
 }
 .launch-modal input::placeholder {
